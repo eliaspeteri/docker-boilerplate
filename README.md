@@ -22,6 +22,10 @@ With `npm`
 npm i && npm run dev
 ```
 
+## What it should look like
+
+![User interface](./src/assets/ui.png "user interface")
+
 ## Uninstallation
 
 Remove the project folder.
