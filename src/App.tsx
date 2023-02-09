@@ -166,8 +166,13 @@ function App() {
   );
 
   return (
-    <div className="App">
-      <div className="h-16" />
+    <div className="App font-['Rubik']">
+      <h1 className="text-2xl pt-8 w-1/2 mx-auto">Docker Boilerplate</h1>
+      <h2 className="text-1xl pt-4 pb-8 w-1/2 mx-auto">
+        It's tedious to build docker-compose files by hand. We've all been there. This app aims to simplify that by
+        allowing the user to select which services they want and the app will come up with a configuration that serves
+        as a good starting point for optioning out further to one's specific needs.
+      </h2>
       <Options
         options={optionsList}
         addItem={addItem}
