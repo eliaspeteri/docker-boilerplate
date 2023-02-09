@@ -1,71 +1,88 @@
-import { IOption } from './interfaces/option.interface';
+import { Option } from './interfaces/option.interface';
 
-export const optionsList: IOption[] = [
-  { image: 'alpine:latest', name: 'alpine' },
-  { image: 'busybox' },
+export const optionsList: Option[] = [
+  { image: 'alpine:latest', name: 'alpine', tags: ['CLI'] },
+  { image: 'busybox', tags: ['CLI'] },
   {
     image: 'nginx:latest',
     name: 'nginx',
     ports: ['8080:80'],
-    volumes: [
-      { source: './nginx.conf', target: '/etc/nginx.conf', flags: 'ro' }
-    ],
-    environmentVariables: ['NGINX_HOST=foobar.com', 'NGINX_PORT=80']
+    volumes: [{ source: './nginx.conf', target: '/etc/nginx.conf', flags: 'ro' }],
+    environmentVariables: ['NGINX_HOST=foobar.com', 'NGINX_PORT=80'],
+    tags: ['Proxy'],
   },
-  { image: 'ubuntu' },
-  { image: 'python' },
+  { image: 'ubuntu', tags: ['CLI'] },
+  { image: 'python', tags: ['Lang'] },
   {
-    image: 'redis:latest',
+    image: 'redis:alpine',
     name: 'redis',
     command: 'redis-server',
     volumes: [
       { source: 'redis-data', target: '/data' },
-      { source: 'redis-conf', target: '/usr/local/etc/redis/redis.conf' }
+      { source: 'redis-conf', target: '/usr/local/etc/redis/redis.conf' },
     ],
-    ports: ['6379:6379']
+    ports: ['6379:6379'],
+    tags: ['Cache'],
   },
   {
     image: 'postgres:latest',
     name: 'postgres',
     ports: ['5432:5432'],
-    environmentVariables: [
-      'POSTGRES_USER=username',
-      'POSTGRES_PASSWORD=password',
-      'POSTGRES_DB=my_db'
-    ],
+    environmentVariables: ['POSTGRES_USER=username', 'POSTGRES_PASSWORD=password', 'POSTGRES_DB=my_db'],
     volumes: [{ source: './db-data/', target: '/var/lib/postgresql/data/' }],
-    restart: 'unless-stopped'
+    restart: 'unless-stopped',
+    tags: ['DB'],
   },
   {
     image: 'node:latest',
     name: 'node',
     ports: ['8080:8080'],
-    volumes: [{ source: '.', target: '/usr/src/app' }]
+    volumes: [{ source: '.', target: '/usr/src/app' }],
+    tags: ['Web'],
   },
   {
     image: 'httpd:latest',
     name: 'httpd',
     ports: ['8080:80'],
-    volumes: [{ source: './website', target: '/usr/local/apache2/htdocs' }]
+    volumes: [{ source: './website', target: '/usr/local/apache2/htdocs' }],
+    tags: ['Proxy'],
+  },
+  {
+    image: 'grafana/grafana',
+    name: 'grafana',
+    ports: ['3000:3000'],
+    tags: ['Monitor'],
   },
   {
     image: 'mongo:latest',
     name: 'mongodb',
     ports: ['27017:27017'],
-    environmentVariables: [
-      'MONGO_INIT_DB_ROOT_USERNAME=root',
-      'MONGO_INIT_DB_ROOT_PASSWORD=password'
-    ],
+    environmentVariables: ['MONGO_INIT_DB_ROOT_USERNAME=root', 'MONGO_INIT_DB_ROOT_PASSWORD=password'],
     volumes: [
       {
         source: 'mongo',
-        target: '/data/db'
-      }
-    ]
+        target: '/data/db',
+      },
+    ],
+    tags: ['DB'],
   },
-  { image: 'traefik' },
-  { image: 'mariadb' },
-  { image: 'docker' },
+  { image: 'traefik', tags: ['Proxy'] },
+  {
+    image: 'mariadb:latest',
+    name: 'mariadb',
+    command: '--transaction-isolation=READ-COMMITTED --binlog-format=ROW',
+    restart: 'always',
+    volumes: [{ source: 'mysql_data', target: '/var/lib/mysql' }],
+    environmentVariables: [
+      'MYSQL_DATABASE=default',
+      'MYSQL_USER=root',
+      'MYSQL_ROOT_PASSWORD=secret',
+      'MYSQL_PASSWORD=secret',
+    ],
+    ports: ['3306:3306', '33060:33060'],
+    tags: ['DB'],
+  },
+  { image: 'docker', tags: ['Docker'] },
   {
     image: 'rabbitmq:latest',
     name: 'rabbitmq',
@@ -73,14 +90,15 @@ export const optionsList: IOption[] = [
     volumes: [
       {
         source: '~/.docker-conf/rabbitmq/data/',
-        target: '/var/lib/rabbitmq/'
+        target: '/var/lib/rabbitmq/',
       },
-      { source: '~/.docker-conf/rabbitmq/log/', target: '/var/log/rabbitmq' }
-    ]
+      { source: '~/.docker-conf/rabbitmq/log/', target: '/var/log/rabbitmq' },
+    ],
+    tags: ['Web'],
   },
-  { image: 'hello-world' },
-  { image: 'openjdk' },
-  { image: 'golang' },
+  { image: 'hello-world', tags: ['CLI'] },
+  { image: 'openjdk', tags: ['Lang'] },
+  { image: 'golang', tags: ['Lang'] },
   {
     image: 'registry:latest',
     name: 'registry',
@@ -88,31 +106,38 @@ export const optionsList: IOption[] = [
     volumes: [
       { source: '/data', target: '/var/lib/registry' },
       { source: '/certs', target: '/certs' },
-      { source: '/auth', target: '/auth' }
+      { source: '/auth', target: '/auth' },
     ],
     environmentVariables: [
       'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt',
       'REGISTRY_HTTP_TLS_KEY=/certs/domain.key',
       'REGISTRY_AUTH=htpasswd',
       'REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd',
-      'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm'
-    ]
+      'REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm',
+    ],
+    tags: ['Docker'],
   },
   {
     image: 'wordpress:latest',
     name: 'wordpress',
     volumes: [{ source: 'wordpress', target: '/var/www/html' }],
-    restart: 'unless-stopped'
+    restart: 'unless-stopped',
+    environmentVariables: [
+      'WORDPRESS_DB_HOST=db',
+      'WORDPRESS_DB_USER=wordpress',
+      'WORDPRESS_DB_PASSWORD=wordpress',
+      'WORDPRESS_DB_NAME=wordpress',
+    ],
+    tags: ['Web'],
   },
-  { image: 'centos' },
-  { image: 'debian' },
+  { image: 'centos', tags: ['CLI'] },
+  { image: 'debian', tags: ['CLI'] },
   {
     image: 'influxdb:latest',
     name: 'influxdb',
-    volumes: [
-      { source: 'influxdbv2', target: '/var/lib/influxdb2', flags: 'rw' }
-    ],
-    ports: ['8086:8086']
+    volumes: [{ source: 'influxdbv2', target: '/var/lib/influxdb2', flags: 'rw' }],
+    ports: ['8086:8086'],
+    tags: ['DB'],
   },
   {
     image: 'telegraf:latest',
@@ -121,45 +146,61 @@ export const optionsList: IOption[] = [
       {
         source: './telegraf/mytelegraf.conf',
         target: '/etc/telegraf/telegraf.conf',
-        flags: 'ro'
-      }
-    ]
+        flags: 'ro',
+      },
+    ],
+    tags: ['Monitor'],
   },
   {
     image: 'consul:latest',
     name: 'consul',
-    command: "'agent -retry-join consul-server-bootstrap -client 0.0.0.0'"
+    command: "'agent -retry-join consul-server-bootstrap -client 0.0.0.0'",
+    tags: ['Web'],
   },
   {
     image: 'consul:latest',
     name: 'consul-server-bootstrap',
     ports: ['8400:8400', '8600:8600/udp'],
-    command: "'agent -server -bootstrap-expect 3 -ui -client 0.0.0.0'"
+    command: "'agent -server -bootstrap-expect 3 -ui -client 0.0.0.0'",
+    tags: ['Web'],
   },
   {
     image: 'certbot/certbot',
     name: 'certbot',
     volumes: [{ source: 'certbot-etc', target: '/etc/letsencrypt' }],
     command:
-      'certonly --webroot --webroot-path=/var/www/html --email example@my_domain --agree-tos --no-eff-email --staging -d my_domain -d www.my_domain'
+      'certonly --webroot --webroot-path=/var/www/html --email example@my_domain --agree-tos --no-eff-email --staging -d my_domain -d www.my_domain',
+    tags: ['Web'],
   },
   {
     image: 'mysql:latest',
     name: 'mysql',
     restart: 'unless-stopped',
-    environmentVariables: [
-      'MYSQL_DATABASE=default',
-      'MYSQL_ROOT_PASSWORD=secret',
-      'MYSQL_HOST=mysql'
-    ],
+    environmentVariables: ['MYSQL_DATABASE=default', 'MYSQL_ROOT_PASSWORD=secret', 'MYSQL_HOST=mysql'],
     volumes: [
       { source: 'mysql-data', target: '/var/lib/mysql' },
       {
         source: './docker-entrypoint-initdb.d',
-        target: 'docker-entrypoint-initdb.d/'
-      }
+        target: 'docker-entrypoint-initdb.d/',
+      },
     ],
     ports: ['3308:3306'],
-    command: "'--default-authentication-plugin=mysql_native_password'"
-  }
+    command: "'--default-authentication-plugin=mysql_native_password'",
+    tags: ['DB'],
+  },
+  {
+    image: 'nextcloud:apache',
+    name: 'nextcloud',
+    restart: 'always',
+    ports: ['80:80'],
+    volumes: [{ source: 'nc_data', target: '/var/www/html' }],
+    environmentVariables: [
+      'REDIS_HOST=redis',
+      'MYSQL_HOST=db',
+      'MYSQL_DATABASE=default',
+      'MYSQL_USER=nextcloud',
+      'MYSQL_PASSWORD=secret',
+    ],
+    tags: ['Web'],
+  },
 ];

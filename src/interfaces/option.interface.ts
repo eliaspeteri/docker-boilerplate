@@ -1,6 +1,6 @@
 import { Volume } from './volume.interface';
 
-export interface IOption {
+export interface Option {
   image: string;
   name?: string;
   ports?: string[];
@@ -9,4 +9,5 @@ export interface IOption {
   command?: string;
   restart?: 'always' | 'unless-stopped' | 'on-failure' | 'no';
   defaultChecked?: boolean;
+  tags?: string[];
 }

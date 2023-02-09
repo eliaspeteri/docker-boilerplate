@@ -7,9 +7,7 @@ import { Volume } from './interfaces/volume.interface';
 import { optionsList } from './options';
 
 function App() {
-  const [selected, setSelected] = useState<Set<number>>(
-    () => new Set([2, 5, 6, 7])
-  );
+  const [selected, setSelected] = useState<Set<number>>(() => new Set([2, 5, 6, 7]));
   const [isNetworkSelected, setNetworkSelected] = useState(true);
   const [isVolumesSelected, setVolumesSelected] = useState(true);
 
@@ -21,20 +19,14 @@ function App() {
   }, []);
 
   const loadFromLocalStorageOrDefault = () => {
-    const userSettingsInLocalStorage =
-      window.localStorage.getItem('userSettings');
+    const userSettingsInLocalStorage = window.localStorage.getItem('userSettings');
 
     if (!userSettingsInLocalStorage) return [2, 5, 6, 7];
     return JSON.parse(userSettingsInLocalStorage);
   };
 
-  const saveToLocalStorage = (
-    selectionSet: Iterable<number> | ArrayLike<number>
-  ) =>
-    window.localStorage.setItem(
-      'userSettings',
-      JSON.stringify(Array.from(selectionSet))
-    );
+  const saveToLocalStorage = (selectionSet: Iterable<number> | ArrayLike<number>) =>
+    window.localStorage.setItem('userSettings', JSON.stringify(Array.from(selectionSet)));
 
   const addItem = (item: number) => {
     setSelected((prev: Set<number>) => {
@@ -64,31 +56,28 @@ function App() {
   };
 
   const printService = (serviceIndex: number) => {
-    const { name, image, command, ports, volumes, environmentVariables } =
-      optionsList[serviceIndex];
+    const { name, image, command, ports, volumes, environmentVariables } = optionsList[serviceIndex];
     return (
       <div>
         <div>
           {'  '}
-          <span className='text-vscblue'>{name || image}</span>:
+          <span className="text-vscblue">{name || image}</span>:
         </div>
         {'    '}
-        <span className='text-vscblue'>image</span>:{' '}
-        <span className='text-vscyellow'>{image}</span>
+        <span className="text-vscblue">image</span>: <span className="text-vscyellow">{image}</span>
         {command && (
           <div>
             {'    '}
-            <span className='text-vscblue'>command</span>:{' '}
-            <span className='text-vscyellow'>{command}</span>
+            <span className="text-vscblue">command</span>: <span className="text-vscyellow">{command}</span>
           </div>
         )}
         {ports && (
           <div>
             {'    '}
-            <span className='text-vscblue'>ports</span>:{' '}
+            <span className="text-vscblue">ports</span>:{' '}
             {ports?.map((port: string) => (
               <div>
-                {'     '} - <span className='text-vscyellow'>'{port}'</span>
+                {'     '} - <span className="text-vscyellow">'{port}'</span>
               </div>
             ))}
           </div>
@@ -96,11 +85,11 @@ function App() {
         {volumes && isVolumesSelected && (
           <div>
             {'    '}
-            <span className='text-vscblue'>volumes</span>:{' '}
+            <span className="text-vscblue">volumes</span>:{' '}
             {volumes?.map((volume: Volume) => (
               <div>
                 {'      '}-{' '}
-                <span className='text-vscyellow'>
+                <span className="text-vscyellow">
                   {`${volume.source}:${volume.target}`}
                   {volume.flags && `:${volume.flags}`}
                 </span>
@@ -111,20 +100,20 @@ function App() {
         {isNetworkSelected && (
           <div>
             {'    '}
-            <span className='text-vscblue'>networks</span>:{' '}
+            <span className="text-vscblue">networks</span>:{' '}
             <div>
-              {'      '}- <span className='text-vscyellow'>{networkName}</span>
+              {'      '}- <span className="text-vscyellow">{networkName}</span>
             </div>
           </div>
         )}
         {environmentVariables && (
           <div>
             {'    '}
-            <span className='text-vscblue'>environment</span>:
+            <span className="text-vscblue">environment</span>:
             <div>
               {environmentVariables.map((variable: string) => (
                 <div>
-                  {'      '}- <span className='text-vscyellow'>{variable}</span>
+                  {'      '}- <span className="text-vscyellow">{variable}</span>
                 </div>
               ))}
             </div>
@@ -136,15 +125,14 @@ function App() {
 
   const printNetworks = () => (
     <div>
-      <span className='text-vscblue'>networks</span>:
+      <span className="text-vscblue">networks</span>:
       <div>
         {'  '}
         {/* TODO: Make network name dynamic with input */}
-        <span className='text-vscblue'>{networkName}</span>:
+        <span className="text-vscblue">{networkName}</span>:
         <div>
           {'    '}
-          <span className='text-vscblue'>driver</span>:{' '}
-          <span className='text-vscyellow'>bridge</span>
+          <span className="text-vscblue">driver</span>: <span className="text-vscyellow">bridge</span>
         </div>
       </div>
     </div>
@@ -154,19 +142,15 @@ function App() {
     // TODO: Prevent duplicates by converting to Set etc.
     return (
       <div>
-        <span className='text-vscblue'>volumes</span>:
+        <span className="text-vscblue">volumes</span>:
         {Array.from(selected).map((item: number) =>
           optionsList[item].volumes?.map((volume: Volume) => (
             <div>
               {volume.source !== '.' &&
-                !(
-                  volume.source.startsWith('.') ||
-                  volume.source.startsWith('~') ||
-                  volume.source.startsWith('/')
-                ) && (
+                !(volume.source.startsWith('.') || volume.source.startsWith('~') || volume.source.startsWith('/')) && (
                   <>
                     {'  '}
-                    <span className='text-vscblue'>{volume.source}</span>:
+                    <span className="text-vscblue">{volume.source}</span>:
                   </>
                 )}
             </div>
@@ -177,14 +161,13 @@ function App() {
   };
   const printVersion = () => (
     <div>
-      <span className='text-vscblue'>version</span>:{' '}
-      <span className='text-vscyellow'>'3'</span>
+      <span className="text-vscblue">version</span>: <span className="text-vscyellow">'3'</span>
     </div>
   );
 
   return (
-    <div className='App'>
-      <div className='h-16' />
+    <div className="App">
+      <div className="h-16" />
       <Options
         options={optionsList}
         addItem={addItem}
