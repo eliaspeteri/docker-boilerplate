@@ -7,9 +7,14 @@ module.exports = {
         vscblue: '#61afef',
         vscyellow: '#e5c07b',
         vscwhite: '#dcdfe4',
-        vscblack: '#282c34'
-      }
-    }
+        vscblack: '#282c34',
+      },
+    },
   },
-  plugins: []
+  plugins: [],
+  safelist: [
+    {
+      pattern: /bg-(green|yellow|red|sky|purple|indigo)/,
+    },
+  ],
 };
