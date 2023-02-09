@@ -10,18 +10,18 @@ type Props = {
 
 export function Configuration(props: Props) {
   return (
-    <pre className='bg-vscblack rounded text-left text-vscwhite p-3 overflow-auto'>
+    <pre className="bg-vscblack rounded text-left text-vscwhite p-3 overflow-auto">
       {props.printVersion()}
       {Array.from(props.selected).length > 0 && (
         <div>
-          <span className='text-vscblue'>services</span>:
+          <span className="text-vscblue">services</span>:
         </div>
       )}
       {Array.from(props.selected).map((itemIndex: number) => (
-        <>
+        <div key={itemIndex}>
           {props.printService(itemIndex)}
           <br />
-        </>
+        </div>
       ))}
       {props.isNetworkSelected && props.printNetworks()}
       <br />

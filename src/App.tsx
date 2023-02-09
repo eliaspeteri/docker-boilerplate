@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { Configuration } from './components/configuration';
 import { Options } from './components/options';
-import { TodoList } from './components/todoList';
 import { Volume } from './interfaces/volume.interface';
 import { optionsList } from './options';
 
@@ -75,8 +74,8 @@ function App() {
           <div>
             {'    '}
             <span className="text-vscblue">ports</span>:{' '}
-            {ports?.map((port: string) => (
-              <div>
+            {ports?.map((port: string, index) => (
+              <div key={index}>
                 {'     '} - <span className="text-vscyellow">'{port}'</span>
               </div>
             ))}
@@ -86,8 +85,8 @@ function App() {
           <div>
             {'    '}
             <span className="text-vscblue">volumes</span>:{' '}
-            {volumes?.map((volume: Volume) => (
-              <div>
+            {volumes?.map((volume: Volume, index) => (
+              <div key={index}>
                 {'      '}-{' '}
                 <span className="text-vscyellow">
                   {`${volume.source}:${volume.target}`}
@@ -111,8 +110,8 @@ function App() {
             {'    '}
             <span className="text-vscblue">environment</span>:
             <div>
-              {environmentVariables.map((variable: string) => (
-                <div>
+              {environmentVariables.map((variable: string, index: number) => (
+                <div key={index}>
                   {'      '}- <span className="text-vscyellow">{variable}</span>
                 </div>
               ))}
@@ -144,8 +143,8 @@ function App() {
       <div>
         <span className="text-vscblue">volumes</span>:
         {Array.from(selected).map((item: number) =>
-          optionsList[item].volumes?.map((volume: Volume) => (
-            <div>
+          optionsList[item].volumes?.map((volume: Volume, index: number) => (
+            <div key={index}>
               {volume.source !== '.' &&
                 !(volume.source.startsWith('.') || volume.source.startsWith('~') || volume.source.startsWith('/')) && (
                   <>
@@ -191,7 +190,14 @@ function App() {
         isNetworkSelected={isNetworkSelected}
         isVolumesSelected={isVolumesSelected}
       />
-      {/* <TodoList /> */}
+      <div className="py-4" />
+      {Array.from(selected).map(
+        (index) =>
+          optionsList[index].dockerfile && (
+            <pre className="text-left p-3 bg-vscblack">{optionsList[index].dockerfile}</pre>
+          )
+      )}
+      <div className="py-2" />
     </div>
   );
 }

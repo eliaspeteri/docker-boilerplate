@@ -27,14 +27,17 @@ export function Options(props: Props) {
     <>
       <div className="grid grid-cols-3 mx-auto w-5/6 gap-y-2">
         {props.options.map((option: Option, index: number) => (
-          <div>
+          <div key={index}>
             <label htmlFor={option.image} className="float-left px-4 align-middle">
               {option.name || option.image}
             </label>
 
             <div className="float-right">
-              {option.tags?.map((tag) => (
-                <span className={`px-8 py-1 bg-${Colors.get(tag)}-500 rounded-l-lg relative left-5 -z-10 align-middle`}>
+              {option.tags?.map((tag, index) => (
+                <span
+                  key={index}
+                  className={`px-8 py-1 bg-${Colors.get(tag)}-500 rounded-l-lg relative left-5 -z-10 align-middle`}
+                >
                   {tag}
                 </span>
               ))}
