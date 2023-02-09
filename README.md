@@ -1,5 +1,9 @@
 # Docker Boilerplate
 
+## URL
+
+This project is **live right now!** Go check it out at <https://eliaspeteri.github.io/docker-boilerplate/>.
+
 ## Motivation
 
 It's tedious to build docker-compose files by hand. We've all been there. This app aims to simplify that by allowing the user to select which services they want and the app will come up with a configuration that serves as a good starting point for optioning out further to one's specific needs.
