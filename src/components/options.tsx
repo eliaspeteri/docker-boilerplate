@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 
 import { Option } from '../interfaces/option.interface';
+import { OptionComponent } from './optionComponent';
 
 type Props = {
   options: Option[];
@@ -27,31 +28,15 @@ export function Options(props: Props) {
     <>
       <div className="grid grid-cols-3 mx-auto w-5/6 gap-y-2">
         {props.options.map((option: Option, index: number) => (
-          <div key={index}>
-            <label htmlFor={option.image} className="float-left px-4 align-middle">
-              {option.name || option.image}
-            </label>
-
-            <div className="float-right">
-              {option.tags?.map((tag, index) => (
-                <span
-                  key={index}
-                  className={`px-8 py-1 bg-${Colors.get(tag)}-500 rounded-l-lg relative left-5 -z-10 align-middle`}
-                >
-                  {tag}
-                </span>
-              ))}
-              <input
-                id={option.image}
-                type="checkbox"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  e.target.checked ? props.addItem(index) : props.removeItem(index)
-                }
-                checked={props.selected.has(index)}
-                className="scale-125"
-              />
-            </div>
-          </div>
+          <OptionComponent
+            key={index}
+            option={option}
+            index={index}
+            Colors={Colors}
+            addItem={props.addItem}
+            removeItem={props.removeItem}
+            selected={props.selected}
+          />
         ))}
       </div>
       <div className="flex flex-row justify-center py-4">
