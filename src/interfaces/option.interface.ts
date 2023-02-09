@@ -9,6 +9,7 @@ export interface Option {
   command?: string;
   restart?: 'always' | 'unless-stopped' | 'on-failure' | 'no';
   defaultChecked?: boolean;
-  tags?: string[];
+  tag?: string;
   dockerfile?: string;
+  alias?: string;
 }
