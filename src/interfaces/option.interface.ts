@@ -10,4 +10,5 @@ export interface Option {
   restart?: 'always' | 'unless-stopped' | 'on-failure' | 'no';
   defaultChecked?: boolean;
   tags?: string[];
+  dockerfile?: string;
 }
