@@ -25,7 +25,7 @@ export function Options(props: Props) {
 
   return (
     <>
-      <div className="grid grid-cols-3 mx-auto w-3/4 gap-y-2">
+      <div className="grid grid-cols-3 mx-auto w-5/6 gap-y-2">
         {props.options.map((option: Option, index: number) => (
           <div>
             <label htmlFor={option.image} className="float-left px-4 align-middle">
@@ -34,7 +34,9 @@ export function Options(props: Props) {
 
             <div className="float-right">
               {option.tags?.map((tag) => (
-                <span className={`px-4 bg-${Colors.get(tag)}-500 rounded-l-lg align-middle`}>{tag}</span>
+                <span className={`px-8 py-1 bg-${Colors.get(tag)}-500 rounded-l-lg relative left-5 -z-10 align-middle`}>
+                  {tag}
+                </span>
               ))}
               <input
                 id={option.image}
@@ -43,7 +45,7 @@ export function Options(props: Props) {
                   e.target.checked ? props.addItem(index) : props.removeItem(index)
                 }
                 checked={props.selected.has(index)}
-                className="scale-150"
+                className="scale-125"
               />
             </div>
           </div>
