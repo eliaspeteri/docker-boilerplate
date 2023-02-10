@@ -8,6 +8,7 @@ module.exports = {
         vscyellow: '#e5c07b',
         vscwhite: '#dcdfe4',
         vscblack: '#282c34',
+        vscmagenta: '#c678dd',
       },
     },
   },
