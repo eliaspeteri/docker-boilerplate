@@ -26,6 +26,15 @@ With `npm`
 npm i && npm run dev
 ```
 
+## Deploying to GitHub Pages
+
+```sh
+npm run build
+git add dist -f
+git commit -m "New release"
+git subtree push --prefix dist origin gh-pages
+```
+
 ## What it should look like
 
 ![User interface](./src/assets/ui.png "user interface")
