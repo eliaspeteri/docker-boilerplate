@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import { Configuration } from './components/configuration';
+import { Dockerfiles } from './components/dockerfiles';
+import { OptionRowComponent } from './components/optionRowComponent';
 import { Options } from './components/options';
 import { Volume } from './interfaces/volume.interface';
 import { optionsList } from './options';
@@ -55,7 +56,7 @@ function App() {
   };
 
   const printService = (serviceIndex: number) => {
-    const { name, image, command, ports, volumes, environmentVariables } = optionsList[serviceIndex];
+    const { name, image, command, ports, volumes, environmentVariables, build } = optionsList[serviceIndex];
     return (
       <div>
         <div>
@@ -118,6 +119,12 @@ function App() {
             </div>
           </div>
         )}
+        {build && (
+          <div>
+            {'    '}
+            <span className="text-vscblue">build</span>: <span className="text-vscyellow">{build}</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -165,39 +172,67 @@ function App() {
   );
 
   return (
-    <div className="App font-['Rubik']">
-      <h1 className="text-2xl pt-8 w-1/2 mx-auto">Docker Boilerplate</h1>
-      <h2 className="text-1xl pt-4 pb-8 w-1/2 mx-auto">
-        It's tedious to build docker-compose files by hand. We've all been there. This app aims to simplify that by
-        allowing the user to select which services they want and the app will come up with a configuration that serves
-        as a good starting point for optioning out further to one's specific needs.
-      </h2>
-      <Options
-        options={optionsList}
-        addItem={addItem}
-        removeItem={removeItem}
-        selected={selected}
-        setNetworkSelected={setNetworkSelected}
-        setVolumesSelected={setVolumesSelected}
-        updateSelected={updateSelected}
-      />
-      <Configuration
-        printVersion={printVersion}
-        selected={selected}
-        printNetworks={printNetworks}
-        printVolumes={printVolumes}
-        printService={printService}
-        isNetworkSelected={isNetworkSelected}
-        isVolumesSelected={isVolumesSelected}
-      />
-      <div className="py-4" />
-      {Array.from(selected).map(
-        (index) =>
-          optionsList[index].dockerfile && (
-            <pre className="text-left p-3 bg-vscblack">{optionsList[index].dockerfile}</pre>
-          )
-      )}
-      <div className="py-2" />
+    <div className="App font-['Rubik'] text-center">
+      <section className="grid grid-cols-2 lg:w-5/6 md:w-full mx-auto">
+        <section>
+          <h1 className="text-2xl pt-8 mx-auto">EZ-Compose</h1>
+          <h2 className="text-1xl pt-4 pb-8 w-4/6 md:w-5/6 mx-auto">
+            <p>
+              It's tedious to build docker-compose files by hand. We've all been there. That's why we came up with{' '}
+              <span className="text-green-400">EZ-Compose</span> to simplify and automate boilerplate processes. Your
+              DevOps engineer friends at the parties you totally go to will thank you profusely.
+            </p>
+            <div className="py-2" />
+            <p>
+              We've made configuring container services easy as pie because some things aren't meant to be needlessly
+              complicated. Simply enable the services you need, copy the configuration and{' '}
+              <span className="text-red-400">hit the ground running.</span>
+            </p>
+            <div className="py-2" />
+            <p>
+              As a bonus, some services come with dockerfiles because the free world couldn't quite bring us images in
+              Docker Hub for everything. But it certainly got us close. If you're curious,{' '}
+              <a
+                href="https://hub.docker.com/search/?q=&type=image&image_filter=official"
+                className="text-blue-400 hover:text-blue-300"
+                target={'_blank'}
+                rel="noopener noreferrer"
+              >
+                here's a list of popular images for bedtime reading.
+              </a>
+            </p>
+          </h2>
+        </section>
+        <OptionRowComponent
+          setNetworkSelected={setNetworkSelected}
+          setVolumesSelected={setVolumesSelected}
+          updateSelected={updateSelected}
+        />
+        <Options
+          options={optionsList}
+          addItem={addItem}
+          removeItem={removeItem}
+          selected={selected}
+          setNetworkSelected={setNetworkSelected}
+          setVolumesSelected={setVolumesSelected}
+          updateSelected={updateSelected}
+        />
+        <section className="sticky">
+          <Configuration
+            printVersion={printVersion}
+            selected={selected}
+            printNetworks={printNetworks}
+            printVolumes={printVolumes}
+            printService={printService}
+            isNetworkSelected={isNetworkSelected}
+            isVolumesSelected={isVolumesSelected}
+          />
+          <div className="py-4" />
+          <Dockerfiles selected={selected} optionsList={optionsList} />
+          <div className="py-4" />
+        </section>
+        <div className="py-8" />
+      </section>
     </div>
   );
 }
