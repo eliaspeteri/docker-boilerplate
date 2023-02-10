@@ -207,6 +207,7 @@ export const optionsList: Option[] = [
   {
     image: 'pocketbase',
     name: 'pocketbase',
+    build: '.',
     dockerfile: `# pocketbase.dockerfile\n# https://pocketbase.io/docs/going-to-production#using-docker\n\nFROM alpine:latest\n\nARG PB_VERSION=0.12.2\n\nRUN apk add --no-cache \\\n\tunzip \\\n\tca-certificates\n\n# download and unzip pocketbase\nADD https://github.com/pocketbase/pocketbase/releases/download/v\${PB_VERSION}\n/pocketbase_\${PB_VERSION}_linux_amd64.zip /tmp/pb.zip\nRUN unzip /tmp/pb.zip -d /pb/\n\nEXPOSE 8080\n\n#start pocketbase\nCMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]`,
     tag: 'DB',
   },

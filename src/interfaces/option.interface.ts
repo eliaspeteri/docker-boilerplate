@@ -12,4 +12,5 @@ export interface Option {
   tag?: string;
   dockerfile?: string;
   alias?: string;
+  build?: string;
 }
