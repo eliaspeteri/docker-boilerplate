@@ -13,18 +13,16 @@ interface Props {
 export function OptionComponent(props: Props) {
   return (
     <div key={props.index} className="py-1">
-      <label className="float-left pl-2" htmlFor={props.option.alias || props.option.name || props.option.image}>
-        {props.option.tag}
-      </label>
       <label
         htmlFor={props.option.alias || props.option.name || props.option.image}
         className={`flex flex-row py-1 px-3 ${
           props.selected.includes(props.index)
             ? `bg-${props.Colors.get(props.option.tag ?? 'vscblack')}-500 w-56 hover:w-60`
             : `bg-${props.Colors.get(props.option.tag ?? 'vscblack')}-700 w-44 hover:w-48`
-        } transition-all float-right rounded-l-lg align-middle cursor-pointer`}
+        } transition-all duration-150 float-right rounded-l-lg cursor-pointer`}
       >
         {props.option.alias || props.option.name || props.option.image}
+        <span className="text-xs text-justify">{props.option.tag}</span>
         <input
           id={props.option.alias || props.option.name || props.option.image}
           type="checkbox"
