@@ -1,7 +1,8 @@
 import { useLayoutEffect, useState } from 'react';
 import { Configuration } from './components/configuration';
 import { Dockerfiles } from './components/dockerfiles';
-import { Explanation } from './components/explanation';
+import { Explanation as Hero } from './components/hero';
+import { Footer } from './components/footer';
 import { OptionRowComponent } from './components/optionRowComponent';
 import { Options } from './components/options';
 // import { Questionnaire } from './components/questionnaire/questionnaire';
@@ -32,7 +33,6 @@ function App() {
 
   const copyConfigurationToClipboard = async () => {
     await navigator.clipboard.writeText(configurationForClipboard);
-    alert('COPIED:\n\n' + configurationForClipboard);
   };
 
   const printService = (serviceIndex: number) => {
@@ -236,7 +236,7 @@ function App() {
       >
         Skip to content
       </a>
-      <Explanation />
+      <Hero />
       {/* <Questionnaire selected={selected} addItem={addItem} removeItem={removeItem} /> */}
       <section id="configuration">
         <OptionRowComponent
@@ -271,6 +271,7 @@ function App() {
           <div className="py-8" />
         </section>
       </section>
+      <Footer />
     </div>
   );
 }
