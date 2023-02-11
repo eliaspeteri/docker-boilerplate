@@ -29,15 +29,24 @@ function App() {
   };
 
   const printService = (serviceIndex: number) => {
-    const { name, image, command, ports, volumes, environmentVariables, build } = optionsList[serviceIndex];
+    const { name, image, command, ports, volumes, environmentVariables, build, dockerfile } = optionsList[serviceIndex];
     return (
       <div>
         <div>
           {'  '}
           <span className="text-vscblue">{name || image}</span>:
         </div>
-        {'    '}
-        <span className="text-vscblue">image</span>: <span className="text-vscyellow">{image}</span>
+        {(image && (
+          <>
+            {'    '}
+            <span className="text-vscblue">image</span>: <span className="text-vscyellow">{image}</span>
+          </>
+        )) ?? (
+          <div>
+            {'    '}
+            <span className="text-vscblue">build</span>: <span className="text-vscyellow">{build}</span>
+          </div>
+        )}
         {command && (
           <div>
             {'    '}
@@ -92,12 +101,6 @@ function App() {
             </div>
           </div>
         )}
-        {build && (
-          <div>
-            {'    '}
-            <span className="text-vscblue">build</span>: <span className="text-vscyellow">{build}</span>
-          </div>
-        )}
       </div>
     );
   };
@@ -118,23 +121,36 @@ function App() {
   );
 
   const printVolumes = () => {
-    // TODO: Prevent duplicates by converting to Set etc.
+    const volumes: (Volume[] | undefined)[] = [];
+    selected.forEach((option) => volumes.push(optionsList[option].volumes));
+
+    const isVolumeLocal = (volume: Volume) => {
+      return volume.source.startsWith('.') || volume.source.startsWith('~') || volume.source.startsWith('/');
+    };
+
+    const printVolume = (index: number, volume: Volume) => (
+      <div key={index}>
+        <span className="text-vscblue">
+          {'  '}
+          {volume.source}
+        </span>
+        :
+      </div>
+    );
+
+    const filteredVolumesMappedToJSX = () => {
+      return volumes.map((volumes: Volume[] | undefined) =>
+        volumes?.map((volume: Volume, index: number) => !isVolumeLocal(volume) && printVolume(index, volume))
+      );
+    };
+
     return (
       <div>
-        <span className="text-vscblue">volumes</span>:
-        {selected.map((item: number) =>
-          optionsList[item].volumes?.map((volume: Volume, index: number) => (
-            <div key={index}>
-              {volume.source !== '.' &&
-                !(volume.source.startsWith('.') || volume.source.startsWith('~') || volume.source.startsWith('/')) && (
-                  <>
-                    {'  '}
-                    <span className="text-vscblue">{volume.source}</span>:
-                  </>
-                )}
-            </div>
-          ))
-        )}
+        {volumes.length > 0 ? (
+          <>
+            <span className="text-vscblue">volumes</span>:{filteredVolumesMappedToJSX()}
+          </>
+        ) : null}
       </div>
     );
   };
@@ -180,9 +196,7 @@ function App() {
               isNetworkSelected={isNetworkSelected}
               isVolumesSelected={isVolumesSelected}
             />
-            <div className="py-4" />
             <Dockerfiles selected={selected} optionsList={optionsList} />
-            <div className="py-4" />
           </section>
           <div className="py-8" />
         </section>
