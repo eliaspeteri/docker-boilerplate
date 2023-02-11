@@ -1,7 +1,7 @@
 import { Volume } from './volume.interface';
 
 export interface Option {
-  image: string;
+  image?: string;
   name?: string;
   ports?: string[];
   environmentVariables?: string[];

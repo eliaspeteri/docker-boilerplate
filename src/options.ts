@@ -34,11 +34,12 @@ export const optionsList: Option[] = [
     tag: 'DB',
   },
   {
-    image: 'node:latest',
     name: 'node',
-    ports: ['8080:8080'],
-    volumes: [{ source: '.', target: '/usr/src/app' }],
+    volumes: [{ source: './node', target: '/usr/src/app' }],
     tag: 'Web',
+    build: './node',
+    dockerfile:
+      '# node.dockerfile\n# https://nodejs.org/en/docs/guides/nodejs-docker-webapp/\n\nFROM node:latest\n\n# Create app directory\nWORKDIR /usr/src/app\n\n# Install app dependencies\n# A wildcard is used to ensure both package.json AND package-lock.json are copied\n# where available (npm@5+)\nCOPY package*.json ./\n\nRUN npm install\n# If you are building your code for production\n# RUN npm ci --only=production\n\n# Bundle app source\nCOPY . .\n\nEXPOSE 8080\nCMD [ "node", "server.js" ]\n',
   },
   {
     image: 'httpd:latest',
@@ -205,10 +206,9 @@ export const optionsList: Option[] = [
     tag: 'Web',
   },
   {
-    image: 'pocketbase',
     name: 'pocketbase',
-    build: '.',
-    dockerfile: `# pocketbase.dockerfile\n# https://pocketbase.io/docs/going-to-production#using-docker\n\nFROM alpine:latest\n\nARG PB_VERSION=0.12.2\n\nRUN apk add --no-cache \\\n\tunzip \\\n\tca-certificates\n\n# download and unzip pocketbase\nADD https://github.com/pocketbase/pocketbase/releases/download/v\${PB_VERSION}\n/pocketbase_\${PB_VERSION}_linux_amd64.zip /tmp/pb.zip\nRUN unzip /tmp/pb.zip -d /pb/\n\nEXPOSE 8080\n\n#start pocketbase\nCMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]`,
+    build: './pocketbase',
+    dockerfile: `# pocketbase.dockerfile\n# https://pocketbase.io/docs/going-to-production#using-docker\n\nFROM alpine:latest\n\nARG PB_VERSION=0.12.2\n\nRUN apk add --no-cache \\\n\tunzip \\\n\tca-certificates\n\n# download and unzip pocketbase\nADD https://github.com/pocketbase/pocketbase/releases/download/v\${PB_VERSION}\n/pocketbase_\${PB_VERSION}_linux_amd64.zip /tmp/pb.zip\nRUN unzip /tmp/pb.zip -d /pb/\n\nEXPOSE 8090\n\n#start pocketbase\nCMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]`,
     tag: 'DB',
   },
 ];
