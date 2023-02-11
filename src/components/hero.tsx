@@ -1,15 +1,17 @@
+import backgroundImage from '../assets/config.jpg';
+
 export function Explanation() {
   return (
     <section className="flex flex-col h-screen relative">
       <img
-        src="https://images.unsplash.com/photo-1667372335879-9b5c551232e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1932&q=80"
-        className="absolute -z-20 opacity-60 bottom-0 mb-auto"
+        src={backgroundImage}
+        className="absolute -z-20 opacity-75 h-screen lg:w-screen lg:object-fill sm:object-none"
       />
       <div className="absolute w-screen h-screen bg-gradient-to-t from-slate-900 -z-10" />
       <div className="py-32" />
-      <section className="text-left w-10/12 ml-auto">
+      <section className="text-left w-10/12 ml-auto sm:mx-autooutline">
         <h1 className="text-7xl text-black drop-shadow pt-8">dcompose 💀</h1>
-        <article className="text-1xl pt-4 w-5/12 pb-8 text-gray-100 drop-shadow">
+        <article className="text-1xl pt-4 lg:w-5/12 sm:w-11/12 pb-8 text-gray-100 drop-shadow">
           <p>
             It's tedious to build docker-compose files by hand. We've all been there. That's why we came up with{' '}
             <span className="text-green-400">dcompose</span> to simplify and automate boilerplate processes. Your DevOps
