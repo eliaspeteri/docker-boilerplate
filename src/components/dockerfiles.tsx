@@ -11,7 +11,7 @@ export function Dockerfiles(props: Props) {
       {props.selected.map(
         (index) =>
           props.optionsList[index].dockerfile && (
-            <pre key={index} className="text-left p-3 bg-vscblack overflow-auto">
+            <pre key={index} className="text-left p-3 bg-vscblack overflow-auto my-4 rounded-r-lg">
               {props.optionsList[index].dockerfile}
             </pre>
           )

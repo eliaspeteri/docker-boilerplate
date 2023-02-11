@@ -10,7 +10,7 @@ type Props = {
 
 export function Configuration(props: Props) {
   return (
-    <pre className="bg-vscblack rounded text-left text-vscwhite p-3 overflow-auto">
+    <pre className="bg-vscblack text-left text-vscwhite p-3 overflow-auto rounded-r-lg">
       {props.printVersion()}
       {props.selected.length > 0 && (
         <div>
