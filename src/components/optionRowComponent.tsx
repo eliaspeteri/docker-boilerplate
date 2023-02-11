@@ -4,6 +4,7 @@ interface Props {
   setNetworkSelected: (checked: boolean) => void;
   setVolumesSelected: (checked: boolean) => void;
   updateSelected: (selection: number[]) => void;
+  copyToClipboard: () => void;
 }
 
 export function OptionRowComponent(props: Props) {
@@ -54,6 +55,14 @@ export function OptionRowComponent(props: Props) {
           onClick={() => props.updateSelected([5, 12, 28])}
         >
           nextcloud
+        </button>
+        <div className="w-4" />
+
+        <button
+          className="rounded bg-vscwhite px-2 text-vscblack hover:bg-slate-300"
+          onClick={() => props.copyToClipboard()}
+        >
+          copy
         </button>
       </div>
     </section>

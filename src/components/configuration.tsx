@@ -6,26 +6,43 @@ type Props = {
   printVolumes: () => JSX.Element;
   isNetworkSelected: boolean;
   isVolumesSelected: boolean;
+  configurationForClipboard: string;
 };
 
-export function Configuration(props: Props) {
-  return (
-    <pre className="bg-vscblack text-left text-vscwhite p-3 overflow-auto rounded-r-lg">
-      {props.printVersion()}
-      {props.selected.length > 0 && (
+export function Configuration({
+  printVersion,
+  selected,
+  printService,
+  printNetworks,
+  printVolumes,
+  isNetworkSelected,
+  isVolumesSelected,
+  configurationForClipboard,
+}: Props) {
+  const printServiceHeader = () => {
+    if (selected.length > 0) {
+      configurationForClipboard += 'services:\n';
+
+      return (
         <div>
           <span className="text-vscblue">services</span>:
         </div>
-      )}
-      {props.selected.map((itemIndex: number) => (
+      );
+    }
+  };
+  return (
+    <pre className="bg-vscblack text-left text-vscwhite p-3 overflow-auto rounded-r-lg">
+      {printVersion()}
+      {printServiceHeader()}
+      {selected.map((itemIndex: number) => (
         <div key={itemIndex}>
-          {props.printService(itemIndex)}
+          {printService(itemIndex)}
           <br />
         </div>
       ))}
-      {props.isNetworkSelected && props.printNetworks()}
+      {isNetworkSelected && printNetworks()}
       <br />
-      {props.selected && props.isVolumesSelected && props.printVolumes()}
+      {selected && isVolumesSelected && printVolumes()}
     </pre>
   );
 }

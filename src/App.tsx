@@ -16,6 +16,8 @@ function App() {
 
   const [networkName, setNetworkName] = useState('my-network');
 
+  let configurationForClipboard = '';
+
   useLayoutEffect(() => {
     const userSettings = loadFromLocalStorageOrDefault();
     userSettings && updateSelected(userSettings);
@@ -28,43 +30,76 @@ function App() {
     return JSON.parse(userSettingsInLocalStorage);
   };
 
+  const copyConfigurationToClipboard = async () => {
+    await navigator.clipboard.writeText(configurationForClipboard);
+    alert('COPIED:\n\n' + configurationForClipboard);
+  };
+
   const printService = (serviceIndex: number) => {
-    const { name, image, command, ports, volumes, environmentVariables, build, dockerfile } = optionsList[serviceIndex];
-    return (
-      <div>
-        <div>
-          {'  '}
-          <span className="text-vscblue">{name || image}</span>:
-        </div>
-        {(image && (
+    const { name, image, command, ports, volumes, environmentVariables, build } = optionsList[serviceIndex];
+    configurationForClipboard += `  ${name || image}:\n`;
+
+    const parseImageOrBuild = () => {
+      if (image) {
+        configurationForClipboard += `    image: ${image}\n`;
+        return (
           <>
             {'    '}
             <span className="text-vscblue">image</span>: <span className="text-vscyellow">{image}</span>
           </>
-        )) ?? (
-          <div>
-            {'    '}
-            <span className="text-vscblue">build</span>: <span className="text-vscyellow">{build}</span>
-          </div>
-        )}
-        {command && (
+        );
+      }
+      configurationForClipboard += `    build: ${build}\n`;
+      return (
+        <>
+          {'    '}
+          <span className="text-vscblue">build</span>: <span className="text-vscyellow">{build}</span>
+        </>
+      );
+    };
+
+    const parseCommand = () => {
+      if (command) {
+        configurationForClipboard += `    command: ${command}\n`;
+        return (
           <div>
             {'    '}
             <span className="text-vscblue">command</span>: <span className="text-vscyellow">{command}</span>
           </div>
-        )}
-        {ports && (
+        );
+      }
+    };
+
+    const parsePorts = () => {
+      if (ports) {
+        configurationForClipboard += `    ports:\n`;
+        ports.forEach((port) => (configurationForClipboard += `      - '${port}'\n`));
+
+        return (
           <div>
             {'    '}
             <span className="text-vscblue">ports</span>:{' '}
-            {ports?.map((port: string, index) => (
+            {ports.map((port: string, index) => (
               <div key={index}>
                 {'     '} - <span className="text-vscyellow">'{port}'</span>
               </div>
             ))}
           </div>
-        )}
-        {volumes && isVolumesSelected && (
+        );
+      }
+    };
+
+    const parseVolumes = () => {
+      if (volumes && isVolumesSelected) {
+        configurationForClipboard += `    volumes:\n`;
+        volumes.forEach(
+          (volume: Volume) =>
+            (configurationForClipboard += `      - ${volume.source}:${volume.target}${
+              volume.flags ? `:${volume.flags}` : ''
+            }\n`)
+        );
+
+        return (
           <div>
             {'    '}
             <span className="text-vscblue">volumes</span>:{' '}
@@ -78,8 +113,15 @@ function App() {
               </div>
             ))}
           </div>
-        )}
-        {isNetworkSelected && (
+        );
+      }
+    };
+
+    const parseNetworks = () => {
+      if (isNetworkSelected) {
+        configurationForClipboard += `    networks:\n      - ${networkName}\n`;
+
+        return (
           <div>
             {'    '}
             <span className="text-vscblue">networks</span>:{' '}
@@ -87,8 +129,16 @@ function App() {
               {'      '}- <span className="text-vscyellow">{networkName}</span>
             </div>
           </div>
-        )}
-        {environmentVariables && (
+        );
+      }
+    };
+
+    const parseEnvironmentVariables = () => {
+      if (environmentVariables) {
+        configurationForClipboard += `    environment:\n`;
+        environmentVariables.forEach((variable) => (configurationForClipboard += `      - ${variable}\n`));
+
+        return (
           <div>
             {'    '}
             <span className="text-vscblue">environment</span>:
@@ -100,7 +150,22 @@ function App() {
               ))}
             </div>
           </div>
-        )}
+        );
+      }
+    };
+
+    return (
+      <div>
+        <div>
+          {'  '}
+          <span className="text-vscblue">{name || image}</span>:
+        </div>
+        {parseImageOrBuild()}
+        {parseCommand()}
+        {parsePorts()}
+        {parseVolumes()}
+        {parseNetworks()}
+        {parseEnvironmentVariables()}
       </div>
     );
   };
@@ -154,11 +219,14 @@ function App() {
       </div>
     );
   };
-  const printVersion = () => (
-    <div>
-      <span className="text-vscblue">version</span>: <span className="text-vscyellow">'3'</span>
-    </div>
-  );
+  const printVersion = () => {
+    configurationForClipboard += "version: '3'\n";
+    return (
+      <div>
+        <span className="text-vscblue">version</span>: <span className="text-vscyellow">'3'</span>
+      </div>
+    );
+  };
 
   return (
     <div className="App font-['Rubik'] text-center">
@@ -175,6 +243,7 @@ function App() {
           setNetworkSelected={setNetworkSelected}
           setVolumesSelected={setVolumesSelected}
           updateSelected={updateSelected}
+          copyToClipboard={copyConfigurationToClipboard}
         />
 
         <section className="grid grid-cols-2 lg:w-5/6 md:w-full mx-auto">
@@ -188,6 +257,7 @@ function App() {
           />
           <section className="sticky">
             <Configuration
+              configurationForClipboard={configurationForClipboard}
               printVersion={printVersion}
               selected={selected}
               printNetworks={printNetworks}
