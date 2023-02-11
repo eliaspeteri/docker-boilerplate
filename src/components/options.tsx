@@ -1,5 +1,3 @@
-import React, { ChangeEvent } from 'react';
-
 import { Option } from '../interfaces/option.interface';
 import { OptionComponent } from './optionComponent';
 
@@ -7,10 +5,9 @@ type Props = {
   options: Option[];
   addItem: (index: number) => void;
   removeItem: (index: number) => void;
-  selected: Set<number>;
+  selected: number[];
   setNetworkSelected: (checked: boolean) => void;
   setVolumesSelected: (checked: boolean) => void;
-  updateSelected: (newSet: number[]) => void;
 };
 
 export function Options(props: Props) {

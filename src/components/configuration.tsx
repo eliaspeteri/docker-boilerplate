@@ -1,6 +1,6 @@
 type Props = {
   printVersion: () => JSX.Element;
-  selected: Set<number>;
+  selected: number[];
   printService: (index: number) => JSX.Element;
   printNetworks: () => JSX.Element;
   printVolumes: () => JSX.Element;
@@ -12,12 +12,12 @@ export function Configuration(props: Props) {
   return (
     <pre className="bg-vscblack rounded text-left text-vscwhite p-3 overflow-auto">
       {props.printVersion()}
-      {Array.from(props.selected).length > 0 && (
+      {props.selected.length > 0 && (
         <div>
           <span className="text-vscblue">services</span>:
         </div>
       )}
-      {Array.from(props.selected).map((itemIndex: number) => (
+      {props.selected.map((itemIndex: number) => (
         <div key={itemIndex}>
           {props.printService(itemIndex)}
           <br />
