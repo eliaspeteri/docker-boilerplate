@@ -10,8 +10,8 @@ export function Explanation() {
       <div className="absolute w-screen h-screen bg-gradient-to-t from-slate-900 -z-10" />
       <div className="py-32" />
       <section className="text-left w-10/12 ml-auto sm:mx-autooutline">
-        <h1 className="text-7xl text-black drop-shadow pt-8">dcompose 💀</h1>
-        <article className="text-1xl pt-4 lg:w-5/12 sm:w-11/12 pb-8 text-gray-100 drop-shadow">
+        <h1 className="text-stroke text-8xl font-extrabold text-[#f2f2f2] pt-8">dcompose 💀</h1>
+        <article className="text-stroke-thin text-1xl pt-4 lg:w-5/12 sm:w-11/12 pb-8 text-gray-100">
           <p>
             It's tedious to build docker-compose files by hand. We've all been there. That's why we came up with{' '}
             <span className="text-green-400">dcompose</span> to simplify and automate boilerplate processes. Your DevOps

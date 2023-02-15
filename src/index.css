@@ -16,3 +16,11 @@
 body {
   margin: 0;
 }
+
+.text-stroke {
+  -webkit-text-stroke: 4px black;
+}
+
+.text-stroke-thin {
+  -webkit-text-stroke: 0.1px black;
+}
