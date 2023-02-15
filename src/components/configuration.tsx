@@ -32,17 +32,19 @@ export function Configuration({
   };
   return (
     <pre className="bg-vscblack text-left text-vscwhite p-3 overflow-auto rounded-r-lg">
-      {printVersion()}
-      {printServiceHeader()}
-      {selected.map((itemIndex: number) => (
-        <div key={itemIndex}>
-          {printService(itemIndex)}
-          <br />
-        </div>
-      ))}
-      {isNetworkSelected && printNetworks()}
-      <br />
-      {selected && isVolumesSelected && printVolumes()}
+      <code>
+        {printVersion()}
+        {printServiceHeader()}
+        {selected.map((itemIndex: number) => (
+          <div key={itemIndex}>
+            {printService(itemIndex)}
+            <br />
+          </div>
+        ))}
+        {isNetworkSelected && printNetworks()}
+        <br />
+        {selected && isVolumesSelected && printVolumes()}
+      </code>
     </pre>
   );
 }
