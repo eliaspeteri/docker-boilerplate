@@ -247,5 +247,13 @@ export const optionsList: Option[] = [
       'MAX_HEAP_SIZE=8G',
       'HEAP_NEWSIZE=200M',
     ],
+    tag: 'DB',
+  },
+  {
+    name: 'adminer',
+    image: 'adminer:latest',
+    restart: 'always',
+    ports: ['7777:8080'],
+    tag: 'Monitor',
   },
 ];
