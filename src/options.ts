@@ -99,7 +99,12 @@ export const optionsList: Option[] = [
   },
   { image: 'hello-world', tag: 'CLI' },
   { image: 'openjdk', tag: 'Lang' },
-  { image: 'golang', tag: 'Lang' },
+  {
+    build: './golang',
+    name: 'golang',
+    tag: 'Lang',
+    dockerfile: `# golang.dockerfile\n# https://golangdocs.com/golang-docker\n\n# The base go-image\nFROM golang:1.14-alpine\n\n# Create a directory for the app\nRUN mkdir /app\n\n# Copy all files from the current directory to the app directory\nCOPY . /app\n\n# Set working directory\nWORKDIR /app\n\n# Run command as described:\n# go build will build an executable file named server in the current directory\nRUN go build -o server .\n\n# Run the server executable\nCMD [ "/app/server" ]`,
+  },
   {
     image: 'registry:latest',
     name: 'registry',
