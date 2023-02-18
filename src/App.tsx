@@ -36,7 +36,7 @@ function App() {
   };
 
   const printService = (serviceIndex: number) => {
-    const { name, image, command, ports, volumes, environmentVariables, build } = optionsList[serviceIndex];
+    const { name, image, command, ports, volumes, environmentVariables, build, restart } = optionsList[serviceIndex];
     configurationForClipboard += `  ${name || image}:\n`;
 
     const parseImageOrBuild = () => {
@@ -59,99 +59,100 @@ function App() {
     };
 
     const parseCommand = () => {
-      if (command) {
-        configurationForClipboard += `    command: ${command}\n`;
-        return (
-          <div>
-            {'    '}
-            <span className="text-vscblue">command</span>: <span className="text-vscyellow">{command}</span>
-          </div>
-        );
-      }
+      configurationForClipboard += `    command: ${command}\n`;
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">command</span>: <span className="text-vscyellow">{command}</span>
+        </div>
+      );
     };
 
     const parsePorts = () => {
-      if (ports) {
-        configurationForClipboard += `    ports:\n`;
-        ports.forEach((port) => (configurationForClipboard += `      - '${port}'\n`));
+      configurationForClipboard += `    ports:\n`;
+      ports!.forEach((port) => (configurationForClipboard += `      - '${port}'\n`));
 
-        return (
-          <div>
-            {'    '}
-            <span className="text-vscblue">ports</span>:{' '}
-            {ports.map((port: string, index) => (
-              <div key={index}>
-                {'     '} - <span className="text-vscyellow">'{port}'</span>
-              </div>
-            ))}
-          </div>
-        );
-      }
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">ports</span>:{' '}
+          {ports!.map((port: string, index) => (
+            <div key={index}>
+              {'     '} - <span className="text-vscyellow">'{port}'</span>
+            </div>
+          ))}
+        </div>
+      );
     };
 
     const parseVolumes = () => {
-      if (volumes && isVolumesSelected) {
-        configurationForClipboard += `    volumes:\n`;
-        volumes.forEach(
-          (volume: Volume) =>
-            (configurationForClipboard += `      - ${volume.source}:${volume.target}${
-              volume.flags ? `:${volume.flags}` : ''
-            }\n`)
-        );
+      configurationForClipboard += `    volumes:\n`;
+      volumes!.forEach(
+        (volume: Volume) =>
+          (configurationForClipboard += `      - ${volume.source}:${volume.target}${
+            volume.flags ? `:${volume.flags}` : ''
+          }\n`)
+      );
 
-        return (
-          <div>
-            {'    '}
-            <span className="text-vscblue">volumes</span>:{' '}
-            {volumes?.map((volume: Volume, index) => (
-              <div key={index}>
-                {'      '}-{' '}
-                <span className="text-vscyellow">
-                  {`${volume.source}:${volume.target}`}
-                  {volume.flags && `:${volume.flags}`}
-                </span>
-              </div>
-            ))}
-          </div>
-        );
-      }
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">volumes</span>:{' '}
+          {volumes?.map((volume: Volume, index) => (
+            <div key={index}>
+              {'      '}-{' '}
+              <span className="text-vscyellow">
+                {`${volume.source}:${volume.target}`}
+                {volume.flags && `:${volume.flags}`}
+              </span>
+            </div>
+          ))}
+        </div>
+      );
     };
 
     const parseNetworks = () => {
-      if (isNetworkSelected) {
-        configurationForClipboard += `    networks:\n      - ${networkName}\n`;
+      configurationForClipboard += `    networks:\n      - ${networkName}\n`;
 
-        return (
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">networks</span>:{' '}
           <div>
-            {'    '}
-            <span className="text-vscblue">networks</span>:{' '}
-            <div>
-              {'      '}- <span className="text-vscyellow">{networkName}</span>
-            </div>
+            {'      '}- <span className="text-vscyellow">{networkName}</span>
           </div>
-        );
-      }
+        </div>
+      );
     };
 
     const parseEnvironmentVariables = () => {
-      if (environmentVariables) {
-        configurationForClipboard += `    environment:\n`;
-        environmentVariables.forEach((variable) => (configurationForClipboard += `      - ${variable}\n`));
+      configurationForClipboard += `    environment:\n`;
+      environmentVariables!.forEach((variable) => (configurationForClipboard += `      - ${variable}\n`));
 
-        return (
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">environment</span>:
           <div>
-            {'    '}
-            <span className="text-vscblue">environment</span>:
-            <div>
-              {environmentVariables.map((variable: string, index: number) => (
-                <div key={index}>
-                  {'      '}- <span className="text-vscyellow">{variable}</span>
-                </div>
-              ))}
-            </div>
+            {environmentVariables!.map((variable: string, index: number) => (
+              <div key={index}>
+                {'      '}- <span className="text-vscyellow">{variable}</span>
+              </div>
+            ))}
           </div>
-        );
-      }
+        </div>
+      );
+    };
+
+    const parseRestart = () => {
+      configurationForClipboard += `    restart: ${restart}\n`;
+
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">restart</span>: <span className="text-vscyellow">{restart}</span>
+        </div>
+      );
     };
 
     return (
@@ -160,12 +161,13 @@ function App() {
           {'  '}
           <span className="text-vscblue">{name || image}</span>:
         </div>
-        {parseImageOrBuild()}
-        {parseCommand()}
-        {parsePorts()}
-        {parseVolumes()}
-        {parseNetworks()}
-        {parseEnvironmentVariables()}
+        {(image || build) && parseImageOrBuild()}
+        {command && parseCommand()}
+        {ports && parsePorts()}
+        {volumes && isVolumesSelected && parseVolumes()}
+        {networkName && parseNetworks()}
+        {environmentVariables && parseEnvironmentVariables()}
+        {restart && parseRestart()}
       </div>
     );
   };
