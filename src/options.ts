@@ -40,6 +40,7 @@ export const optionsList: Option[] = [
     build: './node',
     dockerfile:
       '# node.dockerfile\n# https://nodejs.org/en/docs/guides/nodejs-docker-webapp/\n\nFROM node:latest\n\n# Create app directory\nWORKDIR /usr/src/app\n\n# Install app dependencies\n# A wildcard is used to ensure both package.json AND package-lock.json are copied\n# where available (npm@5+)\nCOPY package*.json ./\n\nRUN npm install\n# If you are building your code for production\n# RUN npm ci --only=production\n\n# Bundle app source\nCOPY . .\n\nEXPOSE 8080\nCMD [ "node", "server.js" ]\n',
+    ports: ['8080:8080'],
   },
   {
     image: 'httpd:latest',
@@ -213,7 +214,7 @@ export const optionsList: Option[] = [
   {
     name: 'pocketbase',
     build: './pocketbase',
-    dockerfile: `# pocketbase.dockerfile\n# https://pocketbase.io/docs/going-to-production#using-docker\n\nFROM alpine:latest\n\nARG PB_VERSION=0.12.2\n\nRUN apk add --no-cache \\\n\tunzip \\\n\tca-certificates\n\n# download and unzip pocketbase\nADD https://github.com/pocketbase/pocketbase/releases/download/v\${PB_VERSION}\n/pocketbase_\${PB_VERSION}_linux_amd64.zip /tmp/pb.zip\nRUN unzip /tmp/pb.zip -d /pb/\n\nEXPOSE 8090\n\n#start pocketbase\nCMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]`,
+    dockerfile: `# pocketbase.dockerfile\n# https://pocketbase.io/docs/going-to-production#using-docker\n\nFROM alpine:latest\n\nARG PB_VERSION=0.12.3\n\nRUN apk add --no-cache \\\n\tunzip \\\n\tca-certificates\n\n# download and unzip pocketbase\nADD https://github.com/pocketbase/pocketbase/releases/download/v\${PB_VERSION}/pocketbase_\${PB_VERSION}_linux_amd64.zip /tmp/pb.zip\nRUN unzip /tmp/pb.zip -d /pb/\n\nEXPOSE 8090\n\n#start pocketbase\nCMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]`,
     tag: 'DB',
   },
   {
@@ -223,5 +224,28 @@ export const optionsList: Option[] = [
     volumes: [{ source: './dbschema', target: 'dbschema' }],
     ports: ['5656:5656'],
     tag: 'DB',
+  },
+  {
+    name: 'cassandra',
+    image: 'cassandra:latest',
+    restart: 'always',
+    ports: ['7000:7000', '9042:9042'],
+    volumes: [
+      { source: '/home/cassandra/commitlog', target: '/var/lib/cassandra/commitlog' },
+      { source: '/home/cassandra/hints', target: '/var/lib/cassandra/hints' },
+      { source: '/home/cassandra/data', target: '/var/lib/cassandra/data' },
+      { source: '/home/cassandra/saved_caches', target: '/var/lib/cassandra/saved_caches' },
+      { source: '/home/cassandra/logs', target: '/var/log/cassandra' },
+    ],
+    environmentVariables: [
+      'CASSANDRA_SEEDS=cassandra',
+      'CASSANDRA_CLUSTER_NAME=cluster',
+      'CASSANDRA_NUM_TOKENS=8',
+      'CASSANDRA_DC=dc1',
+      'CASSANDRA_RACK=rack0',
+      'CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch',
+      'MAX_HEAP_SIZE=8G',
+      'HEAP_NEWSIZE=200M',
+    ],
   },
 ];
