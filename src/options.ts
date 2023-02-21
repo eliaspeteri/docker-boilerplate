@@ -32,6 +32,12 @@ export const optionsList: Option[] = [
     volumes: [{ source: './db-data/', target: '/var/lib/postgresql/data/' }],
     restart: 'unless-stopped',
     tag: 'DB',
+    healthcheck: {
+      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}'],
+      interval: '1s',
+      timeout: '5s',
+      retries: 10,
+    },
   },
   {
     name: 'node',

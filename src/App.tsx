@@ -36,7 +36,8 @@ function App() {
   };
 
   const printService = (serviceIndex: number) => {
-    const { name, image, command, ports, volumes, environmentVariables, build, restart } = optionsList[serviceIndex];
+    const { name, image, command, ports, volumes, environmentVariables, build, restart, healthcheck } =
+      optionsList[serviceIndex];
     configurationForClipboard += `  ${name || image}:\n`;
 
     const parseImageOrBuild = () => {
@@ -155,6 +156,49 @@ function App() {
       );
     };
 
+    const parseHealthCheck = () => {
+      configurationForClipboard += `    healthcheck:\n      test: [`;
+      healthcheck!.test.forEach(
+        (item: string, index: number) =>
+          (configurationForClipboard += `'${item}'${index < healthcheck!.test.length - 1 ? ', ' : ''}`)
+      );
+      configurationForClipboard += `]\n      interval: ${healthcheck!.interval}\n      timeout: ${
+        healthcheck!.timeout
+      }\n      retries: ${healthcheck!.retries}\n`;
+
+      return (
+        <div>
+          {'    '}
+          <span className="text-vscblue">healthcheck</span>:
+          <div>
+            {'      '}
+            <span className="text-vscblue">test</span>: [
+            {healthcheck!.test.map((item: string, index: number) => (
+              <span className="text-vscyellow">
+                '{item}'<span className="text-vscwhite">{index < healthcheck!.test.length - 1 && ', '}</span>
+              </span>
+            ))}
+            ]
+          </div>
+          <div>
+            {'      '}
+            <span className="text-vscblue">interval</span>:{' '}
+            <span className="text-vscyellow">{healthcheck!.interval}</span>
+          </div>
+          <div>
+            {'      '}
+            <span className="text-vscblue">timeout</span>:{' '}
+            <span className="text-vscyellow">{healthcheck!.timeout}</span>
+          </div>
+          <div>
+            {'      '}
+            <span className="text-vscblue">retries</span>:
+            <span className="text-vscyellow"> {healthcheck!.retries}</span>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <div>
         <div>
@@ -168,6 +212,7 @@ function App() {
         {networkName && parseNetworks()}
         {environmentVariables && parseEnvironmentVariables()}
         {restart && parseRestart()}
+        {healthcheck && parseHealthCheck()}
       </div>
     );
   };

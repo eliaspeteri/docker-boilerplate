@@ -1,5 +1,11 @@
 import { Volume } from './volume.interface';
 
+interface HealthCheck {
+  test: string[];
+  interval: string;
+  timeout: string;
+  retries: number;
+}
 export interface Option {
   image?: string;
   name?: string;
@@ -13,4 +19,5 @@ export interface Option {
   dockerfile?: string;
   alias?: string;
   build?: string;
+  healthcheck?: HealthCheck;
 }
